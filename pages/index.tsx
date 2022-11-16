@@ -13,6 +13,7 @@ export type ImgType = {
   link: string;
   video: string;
   id: string;
+  frameid: string;
 };
 
 export interface IImamge {
@@ -46,22 +47,17 @@ export default function Home({ baseUrl }: any) {
       top: secondaryRef.current.value,
     });
 
-    console.log("res",res);
-
     const { data }: { data: IImamge[] } = res.data;
-
-    
 
     setImgSource(
       data.map((item) => ({
+        frameid: item.frameid,
         link: `data-compressed/${item.video}/${item.frameid}`,
         video: item.video,
         id: item.frameid.replace(".jpeg", ""),
       }))
     );
   };
-
-  console.log(imgSource);
 
   return (
     <div className={styles["wrapper"]}>
@@ -120,7 +116,7 @@ export default function Home({ baseUrl }: any) {
                 className={styles["img-content"]}
                 src={e.link}
                 alt="aic-img"
-                onClick={() => router.push("/video/")}
+                onClick={() => window.open(`/video/${e.frameid}`, "_blank")}
               />
               <h4 className={styles["img-title"]}>{e.video}</h4>
             </div>
