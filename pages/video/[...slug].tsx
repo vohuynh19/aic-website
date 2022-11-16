@@ -71,11 +71,7 @@ export default function Home({ imgArr }: { imgArr: ImgType[] }) {
             </div>
           ))
         ) : (
-          <img
-            className={styles["no-data-img"]}
-            src={`${process.cwd()}no-data.svg`}
-            alt="nodata-img"
-          />
+          <div style={{ textAlign: "center" }}>No data</div>
         )}
       </div>
     </div>
