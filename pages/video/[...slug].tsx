@@ -16,14 +16,16 @@ export const getStaticProps = async ({ params }: any) => {
 
   const readfile = async () => {
     var loc = process.cwd();
-
-    const file = await fs.promises.readdir(`${loc}/public/${slug}`);
-
-    return file.map((item: string) => ({
-      video: slug,
-      link: `/${slug}/${item}`,
-      id: (item as string).replace(".jpeg", ""),
-    }));
+    try {
+      const file = await fs.promises.readdir(`${loc}/public/${slug}`);
+      return file.map((item: string) => ({
+        video: slug,
+        link: `/${slug}/${item}`,
+        id: (item as string).replace(".jpeg", ""),
+      }));
+    } catch (e) {
+      return [];
+    }
   };
 
   const result = await readfile();
@@ -46,27 +48,35 @@ export default function Home({ imgArr }: { imgArr: ImgType[] }) {
     document.querySelector(`#${PREFIX}${router.query.frame}`)?.scrollIntoView();
   }, [router]);
 
-  console.log(imgSource);
+  console.log(process.cwd());
 
   return (
     <div className={styles["wrapper"]}>
       <div className={styles["img-view"]}>
-        {imgSource.map((e: ImgType) => (
-          <div key={e.link} className={styles["img-item"]}>
-            <img
-              id={`${PREFIX}${e.id}`}
-              className={styles["img-content"]}
-              src={e.link}
-              alt="aic-img"
-            />
-            <h4
-              className={styles["img-title"]}
-              style={{ color: e.id === router.query.frame ? "red" : "black" }}
-            >
-              {e.video}
-            </h4>
-          </div>
-        ))}
+        {imgSource.length > 0 ? (
+          imgSource.map((e: ImgType) => (
+            <div key={e.link} className={styles["img-item"]}>
+              <img
+                id={`${PREFIX}${e.id}`}
+                className={styles["img-content"]}
+                src={e.link}
+                alt="aic-img"
+              />
+              <h4
+                className={styles["img-title"]}
+                style={{ color: e.id === router.query.frame ? "red" : "black" }}
+              >
+                {e.video}
+              </h4>
+            </div>
+          ))
+        ) : (
+          <img
+            className={styles["no-data-img"]}
+            src={`${process.cwd()}no-data.svg`}
+            alt="nodata-img"
+          />
+        )}
       </div>
     </div>
   );
