@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const http = axios.create({
-  baseURL: "BASE_URL",
+  url: "http://localhost:5454/query",
   timeout: 30000,
   headers: {
     Accept: "application/json",
@@ -17,7 +17,8 @@ http.interceptors.request.use(
     return config;
   },
   (error) => {
-    return Promise.reject(error.response.data);
+    console.log(error);
+    return Promise.reject(error.response?.data);
   }
 );
 
@@ -26,7 +27,9 @@ http.interceptors.response.use(
     return response;
   },
   (error) => {
-    return Promise.reject(error.response.data);
+    console.log(error);
+
+    return Promise.reject(error.response?.data);
   }
 );
 
