@@ -1,5 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { ImgType } from "..";
 import styles from "../styles.module.css";
 
 enum Mode {
@@ -9,57 +11,50 @@ enum Mode {
 
 const fs = require("fs");
 
-export const getStaticProps = async ({ params }) => {
+export const getStaticProps = async ({ params }: any) => {
   const { slug } = params;
-  const imgArr: any = [];
-  const router = useRouter();
 
   const readfile = async () => {
     var loc = process.cwd();
 
-    const file = await fs.promises.readdir(
-      `${loc}/public/${slug}`,
-      (err, files) => {
-        imgArr.push([...files]);
-        return files;
-      }
-    );
+    const file = await fs.promises.readdir(`${loc}/public/${slug}`);
 
-    return file;
+    return file.map((item: string) => ({
+      video: slug,
+      link: `/${slug}/${item}`,
+      id: (item as string).replace(".jpeg", ""),
+    }));
   };
 
   const result = await readfile();
 
   return {
     props: {
-      imgArr: result.map((item) => {
-        return {
-          video: slug,
-          link: `/0/${item}`,
-          id: (item as string).replace(".jpeg", ""),
-        };
-      }),
+      imgArr: result,
     },
   };
 };
 
-export default function Home({ imgArr }) {
-  const router = useRouter();
-  const [mode, setMode] = useState(Mode.DOT);
+const PREFIX = "app_prefix";
 
-  const [imgSource, setImgSource] = useState(imgArr);
+export default function Home({ imgArr }: { imgArr: ImgType[] }) {
+  const router = useRouter();
+
+  const [imgSource, setImgSource] = useState<ImgType[]>(imgArr);
 
   useEffect(() => {
-    document.querySelector(`#hellworld${router.query.frame}`)?.scrollIntoView();
+    document.querySelector(`#${PREFIX}${router.query.frame}`)?.scrollIntoView();
   }, [router]);
+
+  console.log(imgSource);
 
   return (
     <div className={styles["wrapper"]}>
       <div className={styles["img-view"]}>
-        {imgSource.map((e) => (
+        {imgSource.map((e: ImgType) => (
           <div key={e.link} className={styles["img-item"]}>
             <img
-              id={"hellworld" + e.id}
+              id={`${PREFIX}${e.id}`}
               className={styles["img-content"]}
               src={e.link}
               alt="aic-img"

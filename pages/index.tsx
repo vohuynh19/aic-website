@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useRouter } from "next/router";
 import { useState } from "react";
 import styles from "./styles.module.css";
@@ -7,11 +8,17 @@ enum Mode {
   DOT = "DOT",
 }
 
+export type ImgType = {
+  link: string;
+  video: string;
+  id: string;
+};
+
 export default function Home() {
   const [mode, setMode] = useState(Mode.DOT);
   const router = useRouter();
 
-  const [imgSource, setImgSource] = useState([]);
+  const [imgSource, setImgSource] = useState<ImgType[]>([]);
 
   return (
     <div className={styles["wrapper"]}>
@@ -54,17 +61,25 @@ export default function Home() {
       </div>
 
       <div className={styles["img-view"]}>
-        {imgSource.map((e) => (
-          <div key={e.link} className={styles["img-item"]}>
-            <img
-              className={styles["img-content"]}
-              src={e.link}
-              alt="aic-img"
-              onClick={() => router.push("/video/")}
-            />
-            <h4 className={styles["img-title"]}>{e.video}</h4>
-          </div>
-        ))}
+        {imgSource.length > 0 ? (
+          imgSource.map((e) => (
+            <div key={e.link} className={styles["img-item"]}>
+              <img
+                className={styles["img-content"]}
+                src={e.link}
+                alt="aic-img"
+                onClick={() => router.push("/video/")}
+              />
+              <h4 className={styles["img-title"]}>{e.video}</h4>
+            </div>
+          ))
+        ) : (
+          <img
+            className={styles["no-data-img"]}
+            src={"no-data.svg"}
+            alt="nodata-img"
+          />
+        )}
       </div>
     </div>
   );
