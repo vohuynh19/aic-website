@@ -8,6 +8,10 @@ const fs = require("fs");
 
 export let BASE_FOLDER = "";
 
+const trimFile = (str: string) => {
+  return str.replace(/\.[^/.]+$/, "");
+};
+
 export const getStaticProps = async ({ params }: any) => {
   const { slug } = params;
 
@@ -19,7 +23,7 @@ export const getStaticProps = async ({ params }: any) => {
       return file.map((item: string) => ({
         video: slug,
         link: `/${slug}/${item}`,
-        id: (item as string).replace(".jpeg", ""),
+        id: trimFile(item),
       }));
     } catch (e) {
       return [];
