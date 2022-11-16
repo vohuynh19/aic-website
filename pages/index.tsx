@@ -46,11 +46,15 @@ export default function Home({ baseUrl }: any) {
       top: secondaryRef.current.value,
     });
 
-    const { data }: { data: IImamge[] } = res;
+    console.log("res",res);
+
+    const { data }: { data: IImamge[] } = res.data;
+
+    
 
     setImgSource(
       data.map((item) => ({
-        link: `${baseUrl}/public/${item.video}/${item.frameid}`,
+        link: `data-compressed/${item.video}/${item.frameid}`,
         video: item.video,
         id: item.frameid.replace(".jpeg", ""),
       }))
