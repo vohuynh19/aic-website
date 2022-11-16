@@ -15,9 +15,22 @@ export type ImgType = {
   id: string;
 };
 
+export interface IImamge {
+  frameid: string;
+  video: string;
+}
+
 const URL = "http://localhost:5454/query";
 
-export default function Home() {
+export const getStaticProps = () => {
+  return {
+    props: {
+      baseUrl: process.cwd(),
+    },
+  };
+};
+
+export default function Home({ baseUrl }: any) {
   const [mode, setMode] = useState(Mode.DOT);
   const router = useRouter();
 
@@ -27,14 +40,24 @@ export default function Home() {
   const secondaryRef = useRef<any>(null);
 
   const fetchData = async () => {
-    const data = await http.post(URL, {
+    const res = await http.post(URL, {
       method: mode,
       query: inputRef.current.value,
       top: secondaryRef.current.value,
     });
 
-    console.log("fetchData", data);
+    const { data }: { data: IImamge[] } = res;
+
+    setImgSource(
+      data.map((item) => ({
+        link: `${baseUrl}/public/${item.video}/${item.frameid}`,
+        video: item.video,
+        id: item.frameid.replace(".jpeg", ""),
+      }))
+    );
   };
+
+  console.log(imgSource);
 
   return (
     <div className={styles["wrapper"]}>

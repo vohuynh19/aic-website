@@ -4,18 +4,16 @@ import { useEffect, useState } from "react";
 import { ImgType } from "..";
 import styles from "../styles.module.css";
 
-enum Mode {
-  COSINE = "Cosine",
-  DOT = "DOT",
-}
-
 const fs = require("fs");
+
+export let BASE_FOLDER = "";
 
 export const getStaticProps = async ({ params }: any) => {
   const { slug } = params;
 
   const readfile = async () => {
     var loc = process.cwd();
+
     try {
       const file = await fs.promises.readdir(`${loc}/public/${slug}`);
       return file.map((item: string) => ({
@@ -33,22 +31,31 @@ export const getStaticProps = async ({ params }: any) => {
   return {
     props: {
       imgArr: result,
+      baseUrl: process.cwd(),
     },
   };
 };
 
 const PREFIX = "app_prefix";
 
-export default function Home({ imgArr }: { imgArr: ImgType[] }) {
+export default function Home({
+  imgArr,
+  baseUrl,
+}: {
+  imgArr: ImgType[];
+  baseUrl: string;
+}) {
   const router = useRouter();
 
   const [imgSource, setImgSource] = useState<ImgType[]>(imgArr);
 
   useEffect(() => {
+    BASE_FOLDER = baseUrl;
+  }, []);
+
+  useEffect(() => {
     document.querySelector(`#${PREFIX}${router.query.frame}`)?.scrollIntoView();
   }, [router]);
-
-  console.log(process.cwd());
 
   return (
     <div className={styles["wrapper"]}>
