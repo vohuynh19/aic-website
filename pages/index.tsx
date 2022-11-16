@@ -118,10 +118,7 @@ export default function Home({ baseUrl }: any) {
                 alt="aic-img"
                 onClick={() =>
                   window.open(
-                    `/video/${e.video}?frame={${e.frameid.replace(
-                      ".jpeg",
-                      ""
-                    )}}`,
+                    `/video/${e.video}?frame=${e.frameid.replace(".jpeg", "")}`,
                     "_blank"
                   )
                 }
