@@ -116,7 +116,15 @@ export default function Home({ baseUrl }: any) {
                 className={styles["img-content"]}
                 src={e.link}
                 alt="aic-img"
-                onClick={() => window.open(`/video/${e.frameid}`, "_blank")}
+                onClick={() =>
+                  window.open(
+                    `/video/${e.video}?frame={${e.frameid.replace(
+                      ".jpeg",
+                      ""
+                    )}}`,
+                    "_blank"
+                  )
+                }
               />
               <h4 className={styles["img-title"]}>{e.video}</h4>
             </div>
