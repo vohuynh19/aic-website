@@ -59,6 +59,10 @@ export default function Home({ baseUrl }: any) {
     );
   };
 
+  const trimFile = (str: string) => {
+    return str.replace(/\.[^/.]+$/, "");
+  };
+
   return (
     <div className={styles["wrapper"]}>
       <div className={styles["input-config"]}>
@@ -118,7 +122,7 @@ export default function Home({ baseUrl }: any) {
                 alt="aic-img"
                 onClick={() =>
                   window.open(
-                    `/video/${e.video}?frame=${e.frameid.replace(".jpeg", "")}`,
+                    `/video/${e.video}?frame=${trimFile(e.frameid)}`,
                     "_blank"
                   )
                 }
